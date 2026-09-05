@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 import { toast } from "sonner";
@@ -16,6 +16,10 @@ import {
   Cpu,
   Database,
   Signal,
+  Siren,
+  X,
+  ShieldAlert,
+  ArrowRight,
 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { ConveyorPicker } from "@/components/ConveyorPicker";
@@ -57,29 +61,44 @@ const KPI_TONE: Record<string, string> = {
 
 const DYNAMIC_WARNING_ALERTS = [
   {
-    title: "⚠️ Conveyor CV-04 Warning Alert",
-    description: "Vibration level reached 7.8 mm/s (+23%) at Splice J-23. High failure probability (87%).",
-    joint: "J-23",
+    conveyorId: "CV-04",
+    jointId: "J-23",
+    severity: "CRITICAL RED ALERT",
+    title: "VIBRATION & SPLICE RUPTURE RISK",
+    detail: "Vibration level reached 7.8 mm/s (+23% above baseline) at Joint J-23. AI Failure Risk: 87%. Immediate inspection required!",
+    value: "7.8 mm/s | 87% Risk",
   },
   {
-    title: "⚠️ Conveyor CV-07 Tension Alert",
-    description: "Tension reading 82 kN (15% above threshold) detected near splice joint J-12.",
-    joint: "J-12",
+    conveyorId: "CV-07",
+    jointId: "J-12",
+    severity: "HIGH TENSION WARNING",
+    title: "SUSTAINED BELT OVER-TENSION",
+    detail: "Tension load reached 82 kN (15% above safe operating band) near Joint J-12. Risk of splice elongation.",
+    value: "82 kN Tension Spike",
   },
   {
-    title: "⚠️ Conveyor CV-03 Alignment Warning",
-    description: "Belt tracking deviation 3.5 mm detected toward drive pulley at Joint J-08.",
-    joint: "J-08",
+    conveyorId: "CV-03",
+    jointId: "J-08",
+    severity: "TRACKING MISALIGNMENT ALERT",
+    title: "BELT DRIFT DETECTED AT PULLEY",
+    detail: "Belt tracking drifted 3.5 mm toward drive pulley near Joint J-08. Training idler adjustment required.",
+    value: "3.5 mm Alignment Drift",
   },
   {
-    title: "⚠️ Conveyor CV-06 Acoustic Anomaly",
-    description: "Abnormal high-frequency acoustic emission (85 dB) logged near splice J-18.",
-    joint: "J-18",
+    conveyorId: "CV-06",
+    jointId: "J-18",
+    severity: "ACOUSTIC ANOMALY WARNING",
+    title: "SPLICE DELAMINATION NOISE",
+    detail: "High-frequency acoustic emission spike (85 dB @ 2.4 kHz) logged near Joint J-18. Delamination suspected.",
+    value: "85 dB Acoustic Spike",
   },
   {
-    title: "⚠️ Conveyor CV-12 Idler Overheat Alert",
-    description: "Bearing temperature spiked to 68.4 °C near Joint J-31. Inspection required.",
-    joint: "J-31",
+    conveyorId: "CV-12",
+    jointId: "J-31",
+    severity: "BEARING OVERHEAT ALERT",
+    title: "IDLER BEARING OVERHEATING",
+    detail: "Idler bearing temperature climbed to 68.4 °C near Joint J-31. Lubrication or replacement required.",
+    value: "68.4 °C Overheat",
   },
 ];
 
@@ -88,32 +107,30 @@ function Dashboard() {
     useSystem();
   const navigate = useNavigate();
   const alertIndexRef = useRef(0);
+  const [centerAlert, setCenterAlert] = useState<typeof DYNAMIC_WARNING_ALERTS[0] | null>(null);
 
-  // 10-second dynamic warning alert pop-up effect
+  // 10-second dynamic RED warning alert pop-up effect
   useEffect(() => {
-    // Initial notification after 2 seconds
+    // Initial popup after 2 seconds
     const initialTimeout = setTimeout(() => {
-      triggerWarningToast();
+      triggerRedAlert();
     }, 2000);
 
     const interval = setInterval(() => {
-      triggerWarningToast();
+      triggerRedAlert();
     }, 10000);
 
-    function triggerWarningToast() {
+    function triggerRedAlert() {
       const item = DYNAMIC_WARNING_ALERTS[alertIndexRef.current % DYNAMIC_WARNING_ALERTS.length];
       alertIndexRef.current += 1;
 
-      toast.warning(item.title, {
-        description: item.description,
-        duration: 6000,
-        action: {
-          label: "Inspect Joint",
-          onClick: () => {
-            selectConveyor("CV-04", item.joint);
-            navigate({ to: "/belt-joints" });
-          },
-        },
+      // Set center red alert pop-up modal
+      setCenterAlert(item);
+
+      // Toast backup alert
+      toast.error(`🚨 ${item.severity}: ${item.conveyorId} - ${item.jointId}`, {
+        description: item.detail,
+        duration: 5000,
       });
     }
 
@@ -121,7 +138,7 @@ function Dashboard() {
       clearTimeout(initialTimeout);
       clearInterval(interval);
     };
-  }, [navigate, selectConveyor]);
+  }, []);
 
   const conveyor = conveyors.find((c) => c.id === selectedConveyorId)!;
   const joint = conveyor.joints.find((j) => j.id === selectedJointId) ?? conveyor.joints[0];
@@ -129,6 +146,7 @@ function Dashboard() {
   const sensors = live[conveyor.id] ?? conveyor.sensors;
   const counts = (s: Status) => conveyors.filter((c) => c.status === s).length;
   const total = conveyors.length;
+
 
 
   const kpis = [
@@ -406,9 +424,86 @@ function Dashboard() {
         </div>
         
       </div>
+
+      {/* CENTER RED EMERGENCY WARNING POP-UP MODAL */}
+      {centerAlert && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-in fade-in duration-300">
+          <div className="relative w-full max-w-lg rounded-2xl border-2 border-red-500/90 bg-stone-950 p-6 text-red-100 shadow-[0_0_80px_rgba(239,68,68,0.7)] space-y-5 animate-in zoom-in-95 duration-200">
+            {/* Top Header with Pulsing Red Siren */}
+            <div className="flex items-start justify-between gap-4 border-b border-red-500/30 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="relative flex size-12 items-center justify-center rounded-xl bg-red-600/20 border border-red-500/50 text-red-500 animate-pulse">
+                  <Siren className="size-7 text-red-500 animate-bounce" />
+                  <span className="absolute -top-1 -right-1 size-3 rounded-full bg-red-500 animate-ping" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="rounded bg-red-600 px-2 py-0.5 font-mono text-[10px] font-bold text-white uppercase tracking-wider animate-pulse">
+                      {centerAlert.severity}
+                    </span>
+                    <span className="font-mono text-xs text-red-400 font-semibold">10s Dynamic Alert</span>
+                  </div>
+                  <h3 className="font-bold text-base text-white mt-0.5">{centerAlert.title}</h3>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setCenterAlert(null)}
+                className="rounded-lg p-1.5 text-stone-400 hover:bg-red-950 hover:text-white transition-colors"
+              >
+                <X className="size-5" />
+              </button>
+            </div>
+
+            {/* Body Content */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between rounded-lg bg-red-950/40 border border-red-500/30 p-3 text-xs">
+                <div>
+                  <span className="text-stone-400">Target Conveyor & Joint:</span>
+                  <div className="font-mono font-bold text-white text-sm">
+                    {centerAlert.conveyorId} • Joint {centerAlert.jointId}
+                  </div>
+                </div>
+                <div className="text-right">
+                  <span className="text-stone-400">Sensor Reading:</span>
+                  <div className="font-mono font-bold text-red-400 text-sm">{centerAlert.value}</div>
+                </div>
+              </div>
+
+              <p className="text-xs text-stone-200 leading-relaxed bg-stone-900/60 p-3 rounded-lg border border-white/5">
+                {centerAlert.detail}
+              </p>
+            </div>
+
+            {/* Footer Action Buttons */}
+            <div className="flex items-center gap-3 pt-2">
+              <Button
+                className="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold gap-2 shadow-lg shadow-red-900/50 text-xs py-5"
+                onClick={() => {
+                  selectConveyor(centerAlert.conveyorId, centerAlert.jointId);
+                  setCenterAlert(null);
+                  navigate({ to: "/belt-joints" });
+                }}
+              >
+                <ShieldAlert className="size-4" />
+                Inspect Joint {centerAlert.jointId} Now
+                <ArrowRight className="size-4 ml-auto" />
+              </Button>
+              <Button
+                variant="outline"
+                className="border-red-500/40 text-stone-300 hover:bg-stone-900 hover:text-white text-xs py-5"
+                onClick={() => setCenterAlert(null)}
+              >
+                Acknowledge
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </AppShell>
   );
 }
+
 
 // Missing icons for the redesign
 function ActivityIcon(props: any) {
