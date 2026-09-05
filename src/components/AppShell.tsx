@@ -151,32 +151,41 @@ export function AppShell({
         <main className="flex-1 p-4 lg:p-5">{children}</main>
       </div>
 
-      {/* GLOBAL RIGHT CORNER LANDSCAPE ALERT POP-UP (A LITTLE BIGGER) */}
+      {/* GLOBAL RIGHT CORNER MESSAGE / NOTIFICATION POP-UP */}
       {showRedWarning && (
-        <div className="fixed top-5 right-5 z-50 animate-in fade-in slide-in-from-top-3 duration-300">
-          <div className="flex items-center gap-4 rounded-2xl border-2 border-amber-400 bg-white px-5 py-3 text-stone-900 shadow-2xl">
-            <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-amber-50 border border-amber-300 text-amber-500">
-              <BellRing className="size-6 text-amber-500 animate-bounce" />
+        <div className="fixed top-5 right-5 z-50 animate-in fade-in slide-in-from-top-3 duration-300 w-80 sm:w-96">
+          <div className="flex items-center justify-between gap-3 rounded-xl border border-amber-300 bg-white/95 p-3.5 shadow-xl backdrop-blur-md text-stone-900">
+            <div className="flex items-center gap-3 min-w-0 flex-1">
+              <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-amber-50 border border-amber-200 text-amber-500">
+                <BellRing className="size-5 text-amber-500 animate-pulse" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <span className="font-extrabold text-xs text-amber-500 tracking-wider uppercase">
+                    ALERT
+                  </span>
+                  <span className="text-[10px] text-stone-400">• Just now</span>
+                </div>
+                <p className="truncate text-xs font-medium text-stone-700 leading-snug">
+                  {ALERT_REASONS[alertIndex]}
+                </p>
+              </div>
             </div>
-
-            <span className="font-extrabold text-base text-amber-500 tracking-wider uppercase">
-              ALERT
-            </span>
-
-            <button
-              onClick={() => setShowRedWarning(false)}
-              className="ml-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 px-3.5 py-1.5 text-xs font-bold transition-colors shadow-sm"
-            >
-              OK
-            </button>
-
-            <button
-              onClick={() => setShowRedWarning(false)}
-              className="rounded-full p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
-              aria-label="Dismiss alert"
-            >
-              <X className="size-4" />
-            </button>
+            <div className="flex items-center gap-1.5 shrink-0">
+              <button
+                onClick={() => setShowRedWarning(false)}
+                className="rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 px-3 py-1 text-xs font-bold transition-colors shadow-sm"
+              >
+                OK
+              </button>
+              <button
+                onClick={() => setShowRedWarning(false)}
+                className="rounded-lg p-1 text-stone-400 hover:bg-stone-100 hover:text-stone-600 transition-colors"
+                aria-label="Dismiss alert"
+              >
+                <X className="size-4" />
+              </button>
+            </div>
           </div>
         </div>
       )}
