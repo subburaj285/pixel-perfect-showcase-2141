@@ -151,40 +151,57 @@ export function AppShell({
         <main className="flex-1 p-4 lg:p-5">{children}</main>
       </div>
 
-      {/* GLOBAL RIGHT CORNER MESSAGE / NOTIFICATION POP-UP */}
+      {/* UNIQUE FUTURISTIC HIGH-TECH NOTIFICATION POP-UP */}
       {showRedWarning && (
-        <div className="fixed top-5 right-5 z-50 animate-in fade-in slide-in-from-top-3 duration-300 w-80 sm:w-96">
-          <div className="flex items-center justify-between gap-3 rounded-xl border border-amber-300 bg-white/95 p-3.5 shadow-xl backdrop-blur-md text-stone-900">
-            <div className="flex items-center gap-3 min-w-0 flex-1">
-              <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-amber-50 border border-amber-200 text-amber-500">
-                <BellRing className="size-5 text-amber-500 animate-pulse" />
+        <div className="fixed top-5 right-5 z-50 animate-in fade-in slide-in-from-top-4 duration-300 w-80 sm:w-96">
+          <div className="relative overflow-hidden rounded-xl border border-amber-300/80 border-l-4 border-l-amber-500 bg-gradient-to-br from-white via-white to-amber-50/80 p-3.5 shadow-[0_12px_30px_-8px_rgba(245,158,11,0.3)] backdrop-blur-xl text-stone-900">
+            <div className="flex items-center justify-between gap-3">
+              {/* Left: Dual-ring Radar Sonar Icon */}
+              <div className="relative flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 border border-amber-300 text-amber-500 shadow-inner">
+                <span className="absolute inline-flex size-full rounded-xl bg-amber-400 opacity-20 animate-ping" />
+                <BellRing className="relative size-5 text-amber-500 animate-bounce" />
               </div>
+
+              {/* Center: Info & Reason */}
               <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2">
-                  <span className="font-extrabold text-xs text-amber-500 tracking-wider uppercase">
+                <div className="flex items-center gap-2 mb-0.5">
+                  <span className="relative flex size-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full size-2 bg-amber-500" />
+                  </span>
+                  <span className="font-black text-xs text-amber-600 tracking-widest uppercase">
                     ALERT
                   </span>
-                  <span className="text-[10px] text-stone-400">• Just now</span>
+                  <span className="text-[10px] font-semibold text-amber-600/70 bg-amber-100/80 px-1.5 py-0.2 rounded-full border border-amber-200">
+                    LIVE
+                  </span>
                 </div>
-                <p className="truncate text-xs font-medium text-stone-700 leading-snug">
+                <p className="truncate text-xs font-semibold text-stone-700 leading-snug">
                   {ALERT_REASONS[alertIndex]}
                 </p>
               </div>
+
+              {/* Right: Actions */}
+              <div className="flex items-center gap-1.5 shrink-0">
+                <button
+                  onClick={() => setShowRedWarning(false)}
+                  className="rounded-lg bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white font-extrabold text-xs px-3.5 py-1.5 shadow-md shadow-amber-500/25 transition-all hover:scale-105 active:scale-95"
+                >
+                  OK
+                </button>
+                <button
+                  onClick={() => setShowRedWarning(false)}
+                  className="rounded-lg p-1.5 text-stone-400 hover:bg-amber-100/60 hover:text-stone-700 transition-colors"
+                  aria-label="Dismiss alert"
+                >
+                  <X className="size-4" />
+                </button>
+              </div>
             </div>
-            <div className="flex items-center gap-1.5 shrink-0">
-              <button
-                onClick={() => setShowRedWarning(false)}
-                className="rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 px-3 py-1 text-xs font-bold transition-colors shadow-sm"
-              >
-                OK
-              </button>
-              <button
-                onClick={() => setShowRedWarning(false)}
-                className="rounded-lg p-1 text-stone-400 hover:bg-stone-100 hover:text-stone-600 transition-colors"
-                aria-label="Dismiss alert"
-              >
-                <X className="size-4" />
-              </button>
+
+            {/* Bottom: Animated Progress Bar */}
+            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-amber-100 overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-amber-400 to-amber-600 animate-[shrink_10s_linear_infinite]" />
             </div>
           </div>
         </div>
