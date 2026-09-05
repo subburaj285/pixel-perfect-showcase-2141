@@ -153,86 +153,53 @@ export function AppShell({
         <main className="flex-1 p-4 lg:p-5">{children}</main>
       </div>
 
-      {/* PROFESSIONAL BIG DANGER ALARM BANNER */}
+      {/* PROFESSIONAL SMALL-SIZED DANGER NOTIFICATION TOAST */}
       {showRedWarning && (
-        <div className="fixed top-5 right-5 z-50 animate-in fade-in slide-in-from-top-5 duration-300 w-full max-w-lg sm:w-[520px]">
-          <div className="relative overflow-hidden rounded-2xl border-2 border-red-500/80 border-l-[10px] border-l-red-600 bg-white p-5 shadow-[0_20px_60px_-15px_rgba(225,29,72,0.4)] backdrop-blur-2xl text-stone-900">
-            {/* Top Bar: Header & Dismiss */}
-            <div className="flex items-center justify-between pb-3 border-b border-red-100">
-              <div className="flex items-center gap-2.5">
-                <span className="flex items-center gap-1.5 rounded-md bg-red-600 px-3 py-1 text-xs font-black tracking-widest text-white uppercase shadow-md shadow-red-600/30 animate-pulse">
-                  <TriangleAlert className="size-4 text-white fill-white/20" />
-                  DANGER
-                </span>
-                <span className="text-xs font-bold text-red-700 uppercase tracking-wider">
-                  HIGH-PRIORITY SAFETY PROTOCOL
-                </span>
+        <div className="fixed top-5 right-5 z-50 animate-in fade-in slide-in-from-top-4 duration-300 w-80 sm:w-96">
+          <div className="relative overflow-hidden rounded-xl border border-red-500/80 border-l-4 border-l-red-600 bg-white p-3.5 shadow-xl backdrop-blur-xl text-stone-900">
+            <div className="flex items-center justify-between gap-3">
+              {/* Dual-ring Emergency Pulse Icon */}
+              <div className="relative flex size-10 shrink-0 items-center justify-center rounded-xl bg-red-100 border border-red-300 text-red-600 shadow-inner">
+                <span className="absolute inline-flex size-full rounded-xl bg-red-500 opacity-25 animate-ping" />
+                <ShieldAlert className="relative size-5 text-red-600 animate-bounce" />
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] font-medium text-stone-400">
-                  Severity Level: Critical (P1)
-                </span>
+
+              {/* Text & Diagnostic Details */}
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2 mb-0.5">
+                  <span className="flex items-center gap-1 rounded bg-red-600 px-1.5 py-0.5 text-[10px] font-black tracking-wider text-white uppercase shadow-xs animate-pulse">
+                    <TriangleAlert className="size-3 text-white fill-white/20" />
+                    DANGER
+                  </span>
+                  <span className="text-[10px] font-bold text-red-700 uppercase tracking-wider truncate">
+                    CRITICAL HAZARD
+                  </span>
+                </div>
+                <p className="truncate text-xs font-semibold text-stone-800 leading-snug">
+                  {ALERT_REASONS[alertIndex]}
+                </p>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center gap-1.5 shrink-0">
                 <button
                   onClick={() => setShowRedWarning(false)}
-                  className="rounded-lg p-1.5 text-stone-400 hover:bg-red-100 hover:text-stone-700 transition-colors"
+                  className="rounded-lg bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-700 hover:to-rose-800 text-white font-extrabold text-xs px-3 py-1.5 shadow-sm shadow-red-600/30 transition-all hover:scale-105 active:scale-95"
+                >
+                  ACKNOWLEDGE
+                </button>
+                <button
+                  onClick={() => setShowRedWarning(false)}
+                  className="rounded-lg p-1 text-stone-400 hover:bg-red-100 hover:text-stone-700 transition-colors"
                   aria-label="Dismiss danger notification"
                 >
-                  <X className="size-5" />
-                </button>
-              </div>
-            </div>
-
-            {/* Main Content Area */}
-            <div className="mt-4 flex items-start gap-4">
-              {/* Dual-ring Emergency Pulse Icon */}
-              <div className="relative flex size-14 shrink-0 items-center justify-center rounded-2xl bg-red-100 border-2 border-red-300 text-red-600 shadow-inner mt-0.5">
-                <span className="absolute inline-flex size-full rounded-2xl bg-red-500 opacity-25 animate-ping" />
-                <ShieldAlert className="relative size-8 text-red-600 animate-bounce" />
-              </div>
-
-              {/* Text & Telemetry details */}
-              <div className="min-w-0 flex-1">
-                <h4 className="text-base font-extrabold text-red-700 leading-tight">
-                  Critical Operational Hazard Detected
-                </h4>
-                <div className="mt-2 rounded-xl bg-red-50/80 p-3 border border-red-200/80 shadow-xs">
-                  <p className="text-xs font-semibold text-stone-800 leading-relaxed">
-                    {ALERT_REASONS[alertIndex]}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Bottom Action Footer */}
-            <div className="mt-4 flex items-center justify-between gap-3 pt-2">
-              <div className="flex items-center gap-2">
-                <span className="relative flex size-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
-                  <span className="relative inline-flex rounded-full size-2.5 bg-red-600" />
-                </span>
-                <span className="text-xs font-bold text-stone-600">
-                  Automated Edge Sensor Signal
-                </span>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setShowRedWarning(false)}
-                  className="rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 border border-stone-300 px-4 py-2 text-xs font-bold transition-all"
-                >
-                  Dismiss
-                </button>
-                <button
-                  onClick={() => setShowRedWarning(false)}
-                  className="rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-red-700 hover:from-red-700 hover:to-rose-700 text-white font-extrabold text-xs px-5 py-2 shadow-lg shadow-red-600/35 transition-all hover:scale-105 active:scale-95 flex items-center gap-1.5"
-                >
-                  ACKNOWLEDGE HAZARD
+                  <X className="size-4" />
                 </button>
               </div>
             </div>
 
             {/* Bottom Progress Bar */}
-            <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-red-100 overflow-hidden">
+            <div className="absolute bottom-0 left-0 right-0 h-1 bg-red-100 overflow-hidden">
               <div className="h-full bg-gradient-to-r from-red-500 via-rose-600 to-red-700 animate-[shrink_10s_linear_infinite]" />
             </div>
           </div>
