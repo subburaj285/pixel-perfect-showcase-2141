@@ -153,9 +153,9 @@ export function AppShell({
         <main className="flex-1 p-4 lg:p-5">{children}</main>
       </div>
 
-      {/* PROFESSIONAL HIGH-TECH SCADA TELEMETRY ALARM TOAST */}
+      {/* PROFESSIONAL HIGH-TECH SCADA TELEMETRY ALARM TOAST (LEFT ALIGNED) */}
       {showRedWarning && (
-        <div className="fixed top-5 right-5 z-50 animate-in fade-in slide-in-from-top-4 duration-300 w-96 sm:w-[460px]">
+        <div className="fixed bottom-6 left-5 lg:left-68 z-50 animate-in fade-in slide-in-from-left-5 duration-300 w-96 sm:w-[460px]">
           <div className="relative overflow-hidden rounded-2xl border-2 border-amber-400/90 border-l-[8px] border-l-amber-500 bg-slate-950/95 p-4.5 shadow-[0_20px_50px_-10px_rgba(245,158,11,0.45)] backdrop-blur-2xl text-slate-100 font-sans">
             {/* Top Bar: Live Node Sync Header */}
             <div className="flex items-center justify-between pb-2.5 border-b border-amber-500/20 mb-3">
@@ -169,7 +169,7 @@ export function AppShell({
                   SCADA ALARM
                 </span>
                 <span className="text-[11px] font-bold text-amber-400/90 font-mono tracking-wider">
-                  HIGH-PRIORITY TELEMETRY
+                  LEFT NODE TELEMETRY
                 </span>
               </div>
               <button
@@ -198,7 +198,7 @@ export function AppShell({
                 <div className="mt-3 flex items-center justify-between gap-2 pt-2 border-t border-slate-800">
                   <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-amber-400/80">
                     <span className="size-1.5 rounded-full bg-amber-400" />
-                    NODE: EDGE-AI-04 • LATENCY &lt; 8ms
+                    NODE: EDGE-AI-LEFT-01 • LATENCY &lt; 5ms
                   </div>
                   <button
                     onClick={() => setShowRedWarning(false)}

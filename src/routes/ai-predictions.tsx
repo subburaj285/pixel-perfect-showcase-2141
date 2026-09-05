@@ -20,7 +20,10 @@ import {
   Wrench,
   Gauge,
   FileCheck2,
-  SlidersHorizontal,
+  UserCheck,
+  Award,
+  PhoneCall,
+  BadgeCheck,
   BarChart3,
 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
@@ -54,6 +57,54 @@ const PROFESSIONAL_SOPS: Record<string, string[]> = {
   ],
 };
 
+interface AIProfessional {
+  id: string;
+  name: string;
+  role: string;
+  certification: string;
+  avatar: string;
+  status: string;
+  assignedConveyors: string[];
+  phone: string;
+  modelAuditCount: number;
+}
+
+const AI_ENGINEERING_SPECIALISTS: AIProfessional[] = [
+  {
+    id: "ENG-01",
+    name: "Dr. Rajesh Sharma, Ph.D.",
+    role: "Lead Reliability & Vibration AI Specialist",
+    certification: "ISO 18436-2 Vibration Analyst (Category IV)",
+    avatar: "RS",
+    status: "On Shift • Control Room",
+    assignedConveyors: ["CV-04", "CV-07"],
+    phone: "+91 (080) 4591-2011",
+    modelAuditCount: 142,
+  },
+  {
+    id: "ENG-02",
+    name: "Sarah Jenkins, CMRP",
+    role: "Senior SCADA Predictive Maintenance Engineer",
+    certification: "Certified Maintenance & Reliability Professional",
+    avatar: "SJ",
+    status: "Active Telemetry Monitoring",
+    assignedConveyors: ["CV-03", "CV-06"],
+    phone: "+91 (080) 4591-2012",
+    modelAuditCount: 98,
+  },
+  {
+    id: "ENG-03",
+    name: "Alex Vance, M.Sc.",
+    role: "Edge Sensor & Neural Systems Architect",
+    certification: "IoT SCADA Edge Specialist (IEEE Senior Member)",
+    avatar: "AV",
+    status: "On Call • Field Operations",
+    assignedConveyors: ["CV-12", "CV-02"],
+    phone: "+91 (080) 4591-2013",
+    modelAuditCount: 115,
+  },
+];
+
 function AIPredictionsPage() {
   const { selectConveyor } = useSystem();
   const navigate = useNavigate();
@@ -62,7 +113,7 @@ function AIPredictionsPage() {
   const [severityFilter, setSeverityFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [viewMode, setViewMode] = useState<"split" | "matrix">("split");
-  const [activeTab, setActiveTab] = useState<"diagnostics" | "sop">("diagnostics");
+  const [activeTab, setActiveTab] = useState<"diagnostics" | "sop" | "specialists">("diagnostics");
 
   const filteredPredictions = predictions.filter((p) => {
     const matchesSeverity = severityFilter === "all" || p.severity === severityFilter;
@@ -80,7 +131,6 @@ function AIPredictionsPage() {
 
   const criticalCount = predictions.filter((p) => p.severity === "critical").length;
   const highCount = predictions.filter((p) => p.severity === "high").length;
-  const warningCount = predictions.filter((p) => p.severity === "warning").length;
 
   const getSopSteps = (failureType: string) => {
     for (const key in PROFESSIONAL_SOPS) {
@@ -91,10 +141,14 @@ function AIPredictionsPage() {
     return PROFESSIONAL_SOPS["Splice Delamination"];
   };
 
+  const assignedSpecialist = AI_ENGINEERING_SPECIALISTS.find((eng) =>
+    eng.assignedConveyors.includes(selectedPrediction.conveyorId)
+  ) ?? AI_ENGINEERING_SPECIALISTS[0];
+
   return (
     <AppShell
       title="AI Predictive Diagnostics Control Room"
-      subtitle="Neural network joint failure forecasting, SCADA sensor anomaly correlation, and prescriptive maintenance protocols"
+      subtitle="Neural network joint failure forecasting, SCADA sensor anomaly correlation, and certified engineering sign-offs"
     >
       <div className="space-y-6">
         {/* EXECUTIVE INDUSTRIAL METRIC HEADER */}
@@ -147,15 +201,15 @@ function AIPredictionsPage() {
           <div className="panel p-4 bg-gradient-to-br from-surface via-surface to-warning-soft/20 border-l-4 border-l-warning flex items-center justify-between shadow-sm">
             <div>
               <div className="text-[11px] font-extrabold uppercase tracking-wider text-muted-foreground">
-                Neural Confidence Calibration
+                Assigned AI Reliability Staff
               </div>
-              <div className="text-2xl font-black font-mono mt-1 text-warning">96.4%</div>
-              <div className="text-[11px] text-muted-foreground font-semibold mt-1">
-                ISO 10816 Standard Compliant
+              <div className="text-2xl font-black font-mono mt-1 text-warning">3 Certified Specs</div>
+              <div className="text-[11px] text-muted-foreground font-semibold mt-1 flex items-center gap-1">
+                <UserCheck className="size-3 text-healthy" /> ISO 18436 & CMRP Certified
               </div>
             </div>
             <div className="size-11 rounded-2xl bg-warning-soft text-warning flex items-center justify-center border border-warning/20 shadow-xs">
-              <Gauge className="size-6" />
+              <Award className="size-6" />
             </div>
           </div>
         </div>
@@ -310,26 +364,36 @@ function AIPredictionsPage() {
                 </div>
 
                 {/* Tab Navigation Bar */}
-                <div className="flex items-center border-b border-border bg-secondary/20 px-5">
+                <div className="flex items-center border-b border-border bg-secondary/20 px-5 overflow-x-auto">
                   <button
                     onClick={() => setActiveTab("diagnostics")}
-                    className={`flex items-center gap-2 px-4 py-3 text-xs font-bold border-b-2 transition-all ${
+                    className={`flex items-center gap-2 px-4 py-3 text-xs font-bold border-b-2 transition-all whitespace-nowrap ${
                       activeTab === "diagnostics"
                         ? "border-primary text-primary bg-surface"
                         : "border-transparent text-muted-foreground hover:text-foreground"
                     }`}
                   >
-                    <BarChart3 className="size-4" /> Root Cause & Telemetry Correlation
+                    <BarChart3 className="size-4" /> Root Cause & Telemetry
                   </button>
                   <button
                     onClick={() => setActiveTab("sop")}
-                    className={`flex items-center gap-2 px-4 py-3 text-xs font-bold border-b-2 transition-all ${
+                    className={`flex items-center gap-2 px-4 py-3 text-xs font-bold border-b-2 transition-all whitespace-nowrap ${
                       activeTab === "sop"
                         ? "border-primary text-primary bg-surface"
                         : "border-transparent text-muted-foreground hover:text-foreground"
                     }`}
                   >
-                    <FileCheck2 className="size-4" /> Standard Operating Procedure (SOP)
+                    <FileCheck2 className="size-4" /> Maintenance SOP Protocol
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("specialists")}
+                    className={`flex items-center gap-2 px-4 py-3 text-xs font-bold border-b-2 transition-all whitespace-nowrap ${
+                      activeTab === "specialists"
+                        ? "border-primary text-primary bg-surface"
+                        : "border-transparent text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    <UserCheck className="size-4 text-healthy" /> Assigned AI Reliability Engineer
                   </button>
                 </div>
 
@@ -438,7 +502,7 @@ function AIPredictionsPage() {
                         </Button>
                       </div>
                     </div>
-                  ) : (
+                  ) : activeTab === "sop" ? (
                     /* SOP TAB CONTENT */
                     <div className="space-y-5">
                       <div className="rounded-xl border border-primary/30 bg-primary-soft/20 p-4">
@@ -483,6 +547,71 @@ function AIPredictionsPage() {
                         </Button>
                       </div>
                     </div>
+                  ) : (
+                    /* ASSIGNED AI RELIABILITY SPECIALIST TAB CONTENT */
+                    <div className="space-y-5">
+                      <div className="rounded-2xl border border-healthy/40 bg-healthy-soft/20 p-5 shadow-sm">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex items-center gap-4">
+                            <div className="flex size-14 items-center justify-center rounded-2xl bg-healthy text-white font-black text-lg shadow-md">
+                              {assignedSpecialist.avatar}
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <h4 className="font-extrabold text-base text-foreground">
+                                  {assignedSpecialist.name}
+                                </h4>
+                                <BadgeCheck className="size-5 text-healthy fill-healthy/20" />
+                              </div>
+                              <p className="text-xs font-bold text-primary mt-0.5">
+                                {assignedSpecialist.role}
+                              </p>
+                              <p className="text-[11px] text-muted-foreground font-medium mt-0.5">
+                                {assignedSpecialist.certification}
+                              </p>
+                            </div>
+                          </div>
+
+                          <span className="inline-flex items-center gap-1.5 rounded-full bg-healthy-soft px-3 py-1 text-xs font-extrabold text-healthy border border-healthy/40">
+                            <span className="size-2 rounded-full bg-healthy animate-pulse" />
+                            {assignedSpecialist.status}
+                          </span>
+                        </div>
+
+                        <div className="mt-4 grid grid-cols-2 gap-3 pt-3 border-t border-healthy/20 text-xs">
+                          <div>
+                            <span className="text-muted-foreground font-medium block">Phone Hotline:</span>
+                            <span className="font-mono font-bold text-foreground flex items-center gap-1.5 mt-0.5">
+                              <PhoneCall className="size-3.5 text-primary" /> {assignedSpecialist.phone}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground font-medium block">Audited Model Predictions:</span>
+                            <span className="font-mono font-extrabold text-healthy mt-0.5 block">
+                              {assignedSpecialist.modelAuditCount} Verified Audits
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="rounded-xl border border-border bg-secondary/30 p-4">
+                        <div className="text-xs font-extrabold text-foreground uppercase tracking-wider mb-2 flex items-center gap-2">
+                          <Award className="size-4 text-warning" /> Certified Model Verification Sign-Off
+                        </div>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                          This AI prediction signature for Joint{" "}
+                          <span className="font-bold text-foreground">{selectedPrediction.jointId}</span> has been reviewed and validated under ISO 18436 vibration guidelines by{" "}
+                          <span className="font-bold text-foreground">{assignedSpecialist.name}</span>.
+                        </p>
+                      </div>
+
+                      <Button
+                        onClick={() => handleInspect3D(selectedPrediction.conveyorId, selectedPrediction.jointId)}
+                        className="w-full rounded-xl bg-primary text-primary-foreground font-bold py-3 text-sm shadow-md hover:bg-primary/90"
+                      >
+                        Contact &amp; Assign {assignedSpecialist.name.split(",")[0]} to Joint
+                      </Button>
+                    </div>
                   )}
                 </div>
               </div>
@@ -501,46 +630,113 @@ function AIPredictionsPage() {
                     <th className="px-5 py-4">Probability Risk</th>
                     <th className="px-5 py-4">Time Horizon</th>
                     <th className="px-5 py-4">Severity Band</th>
-                    <th className="px-5 py-4">Primary SCADA Cause</th>
+                    <th className="px-5 py-4">Assigned AI Engineer</th>
                     <th className="px-5 py-4 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
-                  {filteredPredictions.map((p, i) => (
-                    <tr
-                      key={i}
-                      onClick={() => handleInspect3D(p.conveyorId, p.jointId)}
-                      className="cursor-pointer transition-colors hover:bg-primary-soft/10"
-                    >
-                      <td className="px-5 py-4 font-mono font-bold text-primary">{p.conveyorId}</td>
-                      <td className="px-5 py-4 font-mono font-bold">{p.jointId}</td>
-                      <td className="px-5 py-4 font-semibold text-foreground">{p.failureType}</td>
-                      <td className="px-5 py-4">
-                        <span
-                          className={`font-mono text-base font-black ${
-                            p.probability > 75 ? "text-critical" : p.probability > 50 ? "text-risk" : "text-warning"
-                          }`}
-                        >
-                          {p.probability}%
-                        </span>
-                      </td>
-                      <td className="px-5 py-4 font-mono font-medium text-stone-600">{p.windowLabel}</td>
-                      <td className="px-5 py-4">
-                        <StatusPill status={p.severity} />
-                      </td>
-                      <td className="px-5 py-4 text-xs text-muted-foreground max-w-xs truncate">{p.mainCause}</td>
-                      <td className="px-5 py-4 text-right">
-                        <Button variant="outline" size="sm" className="rounded-xl font-bold text-xs gap-1">
-                          Inspect <ArrowUpRight className="size-3.5" />
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
+                  {filteredPredictions.map((p, i) => {
+                    const eng = AI_ENGINEERING_SPECIALISTS.find((e) => e.assignedConveyors.includes(p.conveyorId)) ?? AI_ENGINEERING_SPECIALISTS[0];
+                    return (
+                      <tr
+                        key={i}
+                        onClick={() => handleInspect3D(p.conveyorId, p.jointId)}
+                        className="cursor-pointer transition-colors hover:bg-primary-soft/10"
+                      >
+                        <td className="px-5 py-4 font-mono font-bold text-primary">{p.conveyorId}</td>
+                        <td className="px-5 py-4 font-mono font-bold">{p.jointId}</td>
+                        <td className="px-5 py-4 font-semibold text-foreground">{p.failureType}</td>
+                        <td className="px-5 py-4">
+                          <span
+                            className={`font-mono text-base font-black ${
+                              p.probability > 75 ? "text-critical" : p.probability > 50 ? "text-risk" : "text-warning"
+                            }`}
+                          >
+                            {p.probability}%
+                          </span>
+                        </td>
+                        <td className="px-5 py-4 font-mono font-medium text-stone-600">{p.windowLabel}</td>
+                        <td className="px-5 py-4">
+                          <StatusPill status={p.severity} />
+                        </td>
+                        <td className="px-5 py-4 text-xs font-medium text-foreground">
+                          <div className="flex items-center gap-2">
+                            <span className="flex size-6 items-center justify-center rounded-full bg-primary-soft text-primary font-bold text-[10px]">
+                              {eng.avatar}
+                            </span>
+                            {eng.name.split(",")[0]}
+                          </div>
+                        </td>
+                        <td className="px-5 py-4 text-right">
+                          <Button variant="outline" size="sm" className="rounded-xl font-bold text-xs gap-1">
+                            Inspect <ArrowUpRight className="size-3.5" />
+                          </Button>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
           </div>
         )}
+
+        {/* PLANT AI RELIABILITY ENGINEERING ROSTER SECTION */}
+        <div className="panel p-6 border border-border shadow-lg bg-surface space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="flex size-10 items-center justify-center rounded-2xl bg-healthy-soft text-healthy border border-healthy/30 shadow-xs">
+                <BadgeCheck className="size-6" />
+              </div>
+              <div>
+                <h3 className="font-extrabold text-base text-foreground">
+                  Certified Plant AI Reliability Engineering Roster
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  ISO 18436 &amp; CMRP Certified Specialists supervising machine learning model accuracy and field work orders
+                </p>
+              </div>
+            </div>
+            <span className="text-xs font-bold font-mono text-healthy bg-healthy-soft/50 px-3 py-1 rounded-full border border-healthy/30">
+              3 Active Engineers On Shift
+            </span>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-3">
+            {AI_ENGINEERING_SPECIALISTS.map((eng) => (
+              <div
+                key={eng.id}
+                className="panel p-4 border border-border bg-secondary/20 hover:bg-secondary/40 transition-all space-y-3"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex size-11 items-center justify-center rounded-xl bg-primary text-primary-foreground font-black text-sm shadow-sm">
+                    {eng.avatar}
+                  </div>
+                  <span className="text-[10px] font-bold text-healthy bg-healthy-soft px-2 py-0.5 rounded-full border border-healthy/30">
+                    {eng.status}
+                  </span>
+                </div>
+
+                <div>
+                  <h4 className="font-bold text-sm text-foreground">{eng.name}</h4>
+                  <p className="text-xs font-semibold text-primary">{eng.role}</p>
+                  <p className="text-[11px] text-muted-foreground font-medium mt-1 leading-tight">
+                    {eng.certification}
+                  </p>
+                </div>
+
+                <div className="pt-2 border-t border-border flex items-center justify-between text-xs">
+                  <span className="text-muted-foreground font-mono text-[11px]">
+                    Node Scope: {eng.assignedConveyors.join(", ")}
+                  </span>
+                  <span className="font-bold text-foreground font-mono text-[11px]">
+                    {eng.modelAuditCount} Audits
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </AppShell>
   );
