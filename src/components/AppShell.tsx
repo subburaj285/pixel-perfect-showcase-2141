@@ -153,57 +153,66 @@ export function AppShell({
         <main className="flex-1 p-4 lg:p-5">{children}</main>
       </div>
 
-      {/* PROFESSIONAL MEDIUM-LARGE DANGER NOTIFICATION TOAST */}
+      {/* PROFESSIONAL HIGH-TECH SCADA TELEMETRY ALARM TOAST */}
       {showRedWarning && (
-        <div className="fixed top-5 right-5 z-50 animate-in fade-in slide-in-from-top-4 duration-300 w-96 sm:w-[440px]">
-          <div className="relative overflow-hidden rounded-2xl border-2 border-red-500/80 border-l-6 border-l-red-600 bg-white p-4 shadow-2xl backdrop-blur-xl text-stone-900">
+        <div className="fixed top-5 right-5 z-50 animate-in fade-in slide-in-from-top-4 duration-300 w-96 sm:w-[460px]">
+          <div className="relative overflow-hidden rounded-2xl border-2 border-amber-400/90 border-l-[8px] border-l-amber-500 bg-slate-950/95 p-4.5 shadow-[0_20px_50px_-10px_rgba(245,158,11,0.45)] backdrop-blur-2xl text-slate-100 font-sans">
+            {/* Top Bar: Live Node Sync Header */}
+            <div className="flex items-center justify-between pb-2.5 border-b border-amber-500/20 mb-3">
+              <div className="flex items-center gap-2.5">
+                <span className="relative flex size-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full size-2.5 bg-amber-500" />
+                </span>
+                <span className="flex items-center gap-1 rounded bg-amber-500/20 border border-amber-400/40 px-2 py-0.5 text-[11px] font-black tracking-widest text-amber-300 uppercase font-mono">
+                  <TriangleAlert className="size-3.5 text-amber-400" />
+                  SCADA ALARM
+                </span>
+                <span className="text-[11px] font-bold text-amber-400/90 font-mono tracking-wider">
+                  HIGH-PRIORITY TELEMETRY
+                </span>
+              </div>
+              <button
+                onClick={() => setShowRedWarning(false)}
+                className="rounded-lg p-1 text-slate-400 hover:bg-slate-800 hover:text-slate-100 transition-colors"
+                aria-label="Dismiss telemetry alarm"
+              >
+                <X className="size-4" />
+              </button>
+            </div>
+
+            {/* Main Technological Content */}
             <div className="flex items-start gap-3.5">
-              {/* Dual-ring Emergency Pulse Icon */}
-              <div className="relative flex size-12 shrink-0 items-center justify-center rounded-xl bg-red-100 border border-red-300 text-red-600 shadow-inner mt-0.5">
-                <span className="absolute inline-flex size-full rounded-xl bg-red-500 opacity-25 animate-ping" />
-                <ShieldAlert className="relative size-6 text-red-600 animate-bounce" />
+              {/* Dual-ring Cyber Sonar Radar Icon */}
+              <div className="relative flex size-12 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 border border-amber-400/40 text-amber-400 shadow-inner mt-0.5">
+                <span className="absolute inline-flex size-full rounded-xl bg-amber-400 opacity-20 animate-ping" />
+                <BellRing className="relative size-6 text-amber-400 animate-bounce" />
               </div>
 
-              {/* Text & Diagnostic Details */}
+              {/* Text & Sensor Diagnostics */}
               <div className="min-w-0 flex-1">
-                <div className="flex items-center justify-between gap-2 mb-1">
-                  <div className="flex items-center gap-2">
-                    <span className="flex items-center gap-1 rounded bg-red-600 px-2 py-0.5 text-xs font-black tracking-wider text-white uppercase shadow-xs animate-pulse">
-                      <TriangleAlert className="size-3.5 text-white fill-white/20" />
-                      DANGER
-                    </span>
-                    <span className="text-xs font-bold text-red-700 uppercase tracking-wider">
-                      CRITICAL HAZARD
-                    </span>
+                <p className="text-xs font-semibold text-slate-100 leading-snug">
+                  {ALERT_REASONS[alertIndex]}
+                </p>
+
+                <div className="mt-3 flex items-center justify-between gap-2 pt-2 border-t border-slate-800">
+                  <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-amber-400/80">
+                    <span className="size-1.5 rounded-full bg-amber-400" />
+                    NODE: EDGE-AI-04 • LATENCY &lt; 8ms
                   </div>
                   <button
                     onClick={() => setShowRedWarning(false)}
-                    className="rounded-lg p-1 text-stone-400 hover:bg-red-100 hover:text-stone-700 transition-colors"
-                    aria-label="Dismiss danger notification"
+                    className="rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-black text-xs px-4 py-1.5 shadow-md shadow-amber-500/30 transition-all font-mono tracking-wider hover:scale-105 active:scale-95"
                   >
-                    <X className="size-4" />
-                  </button>
-                </div>
-                <p className="text-xs font-semibold text-stone-800 leading-snug line-clamp-2">
-                  {ALERT_REASONS[alertIndex]}
-                </p>
-                <div className="mt-2.5 flex items-center justify-between gap-2 pt-1 border-t border-red-100/60">
-                  <span className="text-[11px] font-bold text-stone-500">
-                    Priority 1 • Edge AI Sensor
-                  </span>
-                  <button
-                    onClick={() => setShowRedWarning(false)}
-                    className="rounded-xl bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-700 hover:to-rose-800 text-white font-extrabold text-xs px-3.5 py-1.5 shadow-md shadow-red-600/30 transition-all hover:scale-105 active:scale-95"
-                  >
-                    ACKNOWLEDGE HAZARD
+                    ACKNOWLEDGE SIGNAL
                   </button>
                 </div>
               </div>
             </div>
 
-            {/* Bottom Progress Bar */}
-            <div className="absolute bottom-0 left-0 right-0 h-1 bg-red-100 overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-red-500 via-rose-600 to-red-700 animate-[shrink_10s_linear_infinite]" />
+            {/* Bottom Animated Laser Progress Bar */}
+            <div className="absolute bottom-0 left-0 right-0 h-1 bg-slate-900 overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 animate-[shrink_10s_linear_infinite]" />
             </div>
           </div>
         </div>
