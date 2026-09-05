@@ -1,7 +1,5 @@
-import { useState, useEffect, useRef } from "react";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
-import { toast } from "sonner";
 import {
   ShieldCheck,
   AlertTriangle,
@@ -9,13 +7,6 @@ import {
   OctagonAlert,
   Cable,
   Clock,
-  TrendingDown,
-  IndianRupee,
-  Leaf,
-  Radio,
-  Cpu,
-  Database,
-  Signal,
 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { ConveyorPicker } from "@/components/ConveyorPicker";
@@ -25,7 +16,7 @@ import { SensorCard } from "@/components/SensorCard";
 import { StatusPill } from "@/components/status";
 import { Button } from "@/components/ui/button";
 import { useSystem } from "@/lib/system-store";
-import { getPrediction, statusMeta, systemStatus, type Status } from "@/lib/mock-data";
+import { getPrediction, statusMeta, type Status } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/")({
@@ -55,56 +46,11 @@ const KPI_TONE: Record<string, string> = {
   critical: "bg-critical-soft text-critical",
 };
 
-const DYNAMIC_WARNING_ALERTS = [
-  {
-    title: "⚠️ Conveyor CV-04 Warning Alert",
-    description: "Vibration level reached 7.8 mm/s (+23%) at Splice J-23. High failure probability (87%).",
-    joint: "J-23",
-  },
-  {
-    title: "⚠️ Conveyor CV-07 Tension Alert",
-    description: "Tension reading 82 kN (15% above threshold) detected near splice joint J-12.",
-    joint: "J-12",
-  },
-  {
-    title: "⚠️ Conveyor CV-03 Alignment Warning",
-    description: "Belt tracking deviation 3.5 mm detected toward drive pulley at Joint J-08.",
-    joint: "J-08",
-  },
-  {
-    title: "⚠️ Conveyor CV-06 Acoustic Anomaly",
-    description: "Abnormal high-frequency acoustic emission (85 dB) logged near splice J-18.",
-    joint: "J-18",
-  },
-  {
-    title: "⚠️ Conveyor CV-12 Idler Overheat Alert",
-    description: "Bearing temperature spiked to 68.4 °C near Joint J-31. Inspection required.",
-    joint: "J-31",
-  },
-];
 
 function Dashboard() {
   const { conveyors, selectedConveyorId, selectedJointId, selectConveyor, selectJoint, live, alerts, tasks, setStatusFilter } =
     useSystem();
   const navigate = useNavigate();
-  const [showRedWarning, setShowRedWarning] = useState(false);
-
-  // 10-second RED WARNING pop-up effect (strictly only "WARNING" in bold red color)
-  useEffect(() => {
-    // Initial popup after 2 seconds
-    const initialTimeout = setTimeout(() => {
-      setShowRedWarning(true);
-    }, 2000);
-
-    const interval = setInterval(() => {
-      setShowRedWarning(true);
-    }, 10000);
-
-    return () => {
-      clearTimeout(initialTimeout);
-      clearInterval(interval);
-    };
-  }, []);
 
   const conveyor = conveyors.find((c) => c.id === selectedConveyorId)!;
   const joint = conveyor.joints.find((j) => j.id === selectedJointId) ?? conveyor.joints[0];
@@ -112,6 +58,7 @@ function Dashboard() {
   const sensors = live[conveyor.id] ?? conveyor.sensors;
   const counts = (s: Status) => conveyors.filter((c) => c.status === s).length;
   const total = conveyors.length;
+
 
 
 
@@ -390,43 +337,6 @@ function Dashboard() {
         </div>
 
       </div>
-
-      {/* CENTER RED WARNING POP-UP MODAL (ONLY SAYS WARNING IN RED COLOR) */}
-      {showRedWarning && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in duration-200">
-          <div className="relative w-full max-w-sm rounded-3xl border-4 border-red-600 bg-stone-950 p-8 text-center text-white shadow-[0_0_100px_rgba(239,68,68,0.9)] space-y-6 animate-in zoom-in-95 duration-200">
-            <button
-              onClick={() => setShowRedWarning(false)}
-              className="absolute top-4 right-4 rounded-full p-2 text-stone-400 hover:bg-red-950 hover:text-white transition-colors"
-            >
-              <X className="size-6" />
-            </button>
-
-            <div className="flex justify-center">
-              <div className="relative flex size-20 items-center justify-center rounded-2xl bg-red-600/20 border-2 border-red-500 text-red-500 animate-pulse">
-                <Siren className="size-12 text-red-500 animate-bounce" />
-                <span className="absolute -top-1 -right-1 size-4 rounded-full bg-red-500 animate-ping" />
-              </div>
-            </div>
-
-            <div className="space-y-1">
-              <h2 className="font-extrabold text-4xl text-red-500 tracking-wider uppercase animate-pulse">
-                WARNING
-              </h2>
-              <p className="text-xs text-red-400 font-mono font-semibold uppercase tracking-widest">
-                CRITICAL SYSTEM ALERT
-              </p>
-            </div>
-
-            <Button
-              className="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-6 text-base rounded-xl shadow-lg shadow-red-950"
-              onClick={() => setShowRedWarning(false)}
-            >
-              OK / DISMISS
-            </Button>
-          </div>
-        </div>
-      )}
     </AppShell>
   );
 }

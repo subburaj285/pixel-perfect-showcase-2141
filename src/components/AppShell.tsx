@@ -1,3 +1,4 @@
+import { useState, useEffect, type ReactNode } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
   LayoutDashboard,
@@ -11,10 +12,12 @@ import {
   Settings,
   Mountain,
   CircleUserRound,
+  Siren,
+  X,
 } from "lucide-react";
-import type { ReactNode } from "react";
 import { useSystem } from "@/lib/system-store";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 const NAV = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -42,6 +45,23 @@ export function AppShell({
   const { alerts, lastUpdate } = useSystem();
   const open = alerts.filter((a) => !a.acknowledged).length;
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const [showRedWarning, setShowRedWarning] = useState(false);
+
+  // Global 10-second RED WARNING pop-up effect for ALL pages
+  useEffect(() => {
+    const initialTimeout = setTimeout(() => {
+      setShowRedWarning(true);
+    }, 2000);
+
+    const interval = setInterval(() => {
+      setShowRedWarning(true);
+    }, 10000);
+
+    return () => {
+      clearTimeout(initialTimeout);
+      clearInterval(interval);
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-background lg:flex">
@@ -120,6 +140,44 @@ export function AppShell({
         </header>
         <main className="flex-1 p-4 lg:p-5">{children}</main>
       </div>
+
+      {/* GLOBAL CENTER RED WARNING POP-UP MODAL (ON ALL PAGES EVERY 10 SECONDS) */}
+      {showRedWarning && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in duration-200">
+          <div className="relative w-full max-w-sm rounded-3xl border-4 border-red-600 bg-stone-950 p-8 text-center text-white shadow-[0_0_100px_rgba(239,68,68,0.9)] space-y-6 animate-in zoom-in-95 duration-200">
+            <button
+              onClick={() => setShowRedWarning(false)}
+              className="absolute top-4 right-4 rounded-full p-2 text-stone-400 hover:bg-red-950 hover:text-white transition-colors"
+            >
+              <X className="size-6" />
+            </button>
+
+            <div className="flex justify-center">
+              <div className="relative flex size-20 items-center justify-center rounded-2xl bg-red-600/20 border-2 border-red-500 text-red-500 animate-pulse">
+                <Siren className="size-12 text-red-500 animate-bounce" />
+                <span className="absolute -top-1 -right-1 size-4 rounded-full bg-red-500 animate-ping" />
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <h2 className="font-extrabold text-4xl text-red-500 tracking-wider uppercase animate-pulse">
+                WARNING
+              </h2>
+              <p className="text-xs text-red-400 font-mono font-semibold uppercase tracking-widest">
+                CRITICAL SYSTEM ALERT
+              </p>
+            </div>
+
+            <Button
+              className="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-6 text-base rounded-xl shadow-lg shadow-red-950"
+              onClick={() => setShowRedWarning(false)}
+            >
+              OK / DISMISS
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
