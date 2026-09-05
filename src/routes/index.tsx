@@ -1,5 +1,7 @@
+import { useEffect, useRef } from "react";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
+import { toast } from "sonner";
 import {
   ShieldCheck,
   AlertTriangle,
@@ -53,10 +55,73 @@ const KPI_TONE: Record<string, string> = {
   critical: "bg-critical-soft text-critical",
 };
 
+const DYNAMIC_WARNING_ALERTS = [
+  {
+    title: "⚠️ Conveyor CV-04 Warning Alert",
+    description: "Vibration level reached 7.8 mm/s (+23%) at Splice J-23. High failure probability (87%).",
+    joint: "J-23",
+  },
+  {
+    title: "⚠️ Conveyor CV-07 Tension Alert",
+    description: "Tension reading 82 kN (15% above threshold) detected near splice joint J-12.",
+    joint: "J-12",
+  },
+  {
+    title: "⚠️ Conveyor CV-03 Alignment Warning",
+    description: "Belt tracking deviation 3.5 mm detected toward drive pulley at Joint J-08.",
+    joint: "J-08",
+  },
+  {
+    title: "⚠️ Conveyor CV-06 Acoustic Anomaly",
+    description: "Abnormal high-frequency acoustic emission (85 dB) logged near splice J-18.",
+    joint: "J-18",
+  },
+  {
+    title: "⚠️ Conveyor CV-12 Idler Overheat Alert",
+    description: "Bearing temperature spiked to 68.4 °C near Joint J-31. Inspection required.",
+    joint: "J-31",
+  },
+];
+
 function Dashboard() {
   const { conveyors, selectedConveyorId, selectedJointId, selectConveyor, selectJoint, live, alerts, tasks, setStatusFilter } =
     useSystem();
   const navigate = useNavigate();
+  const alertIndexRef = useRef(0);
+
+  // 10-second dynamic warning alert pop-up effect
+  useEffect(() => {
+    // Initial notification after 2 seconds
+    const initialTimeout = setTimeout(() => {
+      triggerWarningToast();
+    }, 2000);
+
+    const interval = setInterval(() => {
+      triggerWarningToast();
+    }, 10000);
+
+    function triggerWarningToast() {
+      const item = DYNAMIC_WARNING_ALERTS[alertIndexRef.current % DYNAMIC_WARNING_ALERTS.length];
+      alertIndexRef.current += 1;
+
+      toast.warning(item.title, {
+        description: item.description,
+        duration: 6000,
+        action: {
+          label: "Inspect Joint",
+          onClick: () => {
+            selectConveyor("CV-04", item.joint);
+            navigate({ to: "/belt-joints" });
+          },
+        },
+      });
+    }
+
+    return () => {
+      clearTimeout(initialTimeout);
+      clearInterval(interval);
+    };
+  }, [navigate, selectConveyor]);
 
   const conveyor = conveyors.find((c) => c.id === selectedConveyorId)!;
   const joint = conveyor.joints.find((j) => j.id === selectedJointId) ?? conveyor.joints[0];
@@ -64,6 +129,7 @@ function Dashboard() {
   const sensors = live[conveyor.id] ?? conveyor.sensors;
   const counts = (s: Status) => conveyors.filter((c) => c.status === s).length;
   const total = conveyors.length;
+
 
   const kpis = [
     { key: "total" as const, label: "Total Conveyor", value: total, icon: Cable, filter: "all" as const },
