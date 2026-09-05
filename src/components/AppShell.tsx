@@ -34,11 +34,11 @@ const NAV = [
 ] as const;
 
 const ALERT_REASONS = [
-  "CV-04 Joint J-23: High vibration spike (7.8 mm/s) detected.",
-  "CV-07 Joint J-12: Sustained belt over-tension (82 kN).",
-  "CV-03 Joint J-08: Belt tracking drift (3.5 mm) at pulley.",
-  "CV-06 Joint J-18: Acoustic delamination anomaly (85 dB).",
-  "CV-12 Joint J-31: Idler bearing temperature elevated (68.4 °C).",
+  "Conveyor System CV-04 (Joint J-23): High-magnitude vibration spike of 7.8 mm/s detected. Immediate mechanical inspection required.",
+  "Conveyor System CV-07 (Joint J-12): Sustained belt over-tension exceeding safety threshold (82 kN). Critical risk of joint structural failure.",
+  "Conveyor System CV-03 (Joint J-08): Lateral belt tracking misalignment of 3.5 mm recorded at main drive pulley.",
+  "Conveyor System CV-06 (Joint J-18): Acoustic delamination anomaly detected at 85 dB intensity. Potential splice compromise.",
+  "Conveyor System CV-12 (Joint J-31): Elevated idler bearing operating temperature recorded at 68.4 °C.",
 ];
 
 export function AppShell({
@@ -165,12 +165,12 @@ export function AppShell({
                   DANGER
                 </span>
                 <span className="text-xs font-bold text-red-700 uppercase tracking-wider">
-                  CRITICAL SAFETY PROTOCOL
+                  HIGH-PRIORITY SAFETY PROTOCOL
                 </span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-[11px] font-medium text-stone-400">
-                  Priority 1 Alarm
+                  Severity Level: Critical (P1)
                 </span>
                 <button
                   onClick={() => setShowRedWarning(false)}
@@ -193,7 +193,7 @@ export function AppShell({
               {/* Text & Telemetry details */}
               <div className="min-w-0 flex-1">
                 <h4 className="text-base font-extrabold text-red-700 leading-tight">
-                  Critical Telemetry Fault Detected
+                  Critical Operational Hazard Detected
                 </h4>
                 <div className="mt-2 rounded-xl bg-red-50/80 p-3 border border-red-200/80 shadow-xs">
                   <p className="text-xs font-semibold text-stone-800 leading-relaxed">
@@ -211,7 +211,7 @@ export function AppShell({
                   <span className="relative inline-flex rounded-full size-2.5 bg-red-600" />
                 </span>
                 <span className="text-xs font-bold text-stone-600">
-                  Automated SCADA Signal
+                  Automated Edge Sensor Signal
                 </span>
               </div>
 
@@ -226,7 +226,7 @@ export function AppShell({
                   onClick={() => setShowRedWarning(false)}
                   className="rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-red-700 hover:from-red-700 hover:to-rose-700 text-white font-extrabold text-xs px-5 py-2 shadow-lg shadow-red-600/35 transition-all hover:scale-105 active:scale-95 flex items-center gap-1.5"
                 >
-                  ACKNOWLEDGE DANGER
+                  ACKNOWLEDGE HAZARD
                 </button>
               </div>
             </div>
