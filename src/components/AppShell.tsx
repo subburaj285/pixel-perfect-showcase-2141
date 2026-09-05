@@ -12,7 +12,7 @@ import {
   Settings,
   Mountain,
   CircleUserRound,
-  Siren,
+  AlertTriangle,
   X,
 } from "lucide-react";
 import { useSystem } from "@/lib/system-store";
@@ -154,7 +154,7 @@ export function AppShell({
 
             <div className="flex justify-center">
               <div className="relative flex size-14 items-center justify-center rounded-xl bg-red-600/20 border-2 border-red-500 text-red-500 animate-pulse">
-                <Siren className="size-8 text-red-500 animate-bounce" />
+                <AlertTriangle className="size-8 text-red-500 animate-bounce" />
                 <span className="absolute -top-1 -right-1 size-3 rounded-full bg-red-500 animate-ping" />
               </div>
             </div>
