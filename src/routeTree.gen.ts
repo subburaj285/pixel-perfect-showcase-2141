@@ -10,33 +10,141 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AiPredictionsRouteImport } from './routes/ai-predictions'
+import { Route as AlertsRouteImport } from './routes/alerts'
+import { Route as BeltJointsRouteImport } from './routes/belt-joints'
+import { Route as ConveyorsRouteImport } from './routes/conveyors'
+import { Route as LiveMonitorRouteImport } from './routes/live-monitor'
+import { Route as MaintenanceRouteImport } from './routes/maintenance'
+import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as SettingsRouteImport } from './routes/settings'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AiPredictionsRoute = AiPredictionsRouteImport.update({
+  id: '/ai-predictions',
+  path: '/ai-predictions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AlertsRoute = AlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BeltJointsRoute = BeltJointsRouteImport.update({
+  id: '/belt-joints',
+  path: '/belt-joints',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConveyorsRoute = ConveyorsRouteImport.update({
+  id: '/conveyors',
+  path: '/conveyors',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LiveMonitorRoute = LiveMonitorRouteImport.update({
+  id: '/live-monitor',
+  path: '/live-monitor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MaintenanceRoute = MaintenanceRouteImport.update({
+  id: '/maintenance',
+  path: '/maintenance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ai-predictions': typeof AiPredictionsRoute
+  '/alerts': typeof AlertsRoute
+  '/belt-joints': typeof BeltJointsRoute
+  '/conveyors': typeof ConveyorsRoute
+  '/live-monitor': typeof LiveMonitorRoute
+  '/maintenance': typeof MaintenanceRoute
+  '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ai-predictions': typeof AiPredictionsRoute
+  '/alerts': typeof AlertsRoute
+  '/belt-joints': typeof BeltJointsRoute
+  '/conveyors': typeof ConveyorsRoute
+  '/live-monitor': typeof LiveMonitorRoute
+  '/maintenance': typeof MaintenanceRoute
+  '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/ai-predictions': typeof AiPredictionsRoute
+  '/alerts': typeof AlertsRoute
+  '/belt-joints': typeof BeltJointsRoute
+  '/conveyors': typeof ConveyorsRoute
+  '/live-monitor': typeof LiveMonitorRoute
+  '/maintenance': typeof MaintenanceRoute
+  '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/ai-predictions'
+    | '/alerts'
+    | '/belt-joints'
+    | '/conveyors'
+    | '/live-monitor'
+    | '/maintenance'
+    | '/reports'
+    | '/settings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/ai-predictions'
+    | '/alerts'
+    | '/belt-joints'
+    | '/conveyors'
+    | '/live-monitor'
+    | '/maintenance'
+    | '/reports'
+    | '/settings'
+  id:
+    | '__root__'
+    | '/'
+    | '/ai-predictions'
+    | '/alerts'
+    | '/belt-joints'
+    | '/conveyors'
+    | '/live-monitor'
+    | '/maintenance'
+    | '/reports'
+    | '/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AiPredictionsRoute: typeof AiPredictionsRoute
+  AlertsRoute: typeof AlertsRoute
+  BeltJointsRoute: typeof BeltJointsRoute
+  ConveyorsRoute: typeof ConveyorsRoute
+  LiveMonitorRoute: typeof LiveMonitorRoute
+  MaintenanceRoute: typeof MaintenanceRoute
+  ReportsRoute: typeof ReportsRoute
+  SettingsRoute: typeof SettingsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +156,75 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ai-predictions': {
+      id: '/ai-predictions'
+      path: '/ai-predictions'
+      fullPath: '/ai-predictions'
+      preLoaderRoute: typeof AiPredictionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/alerts': {
+      id: '/alerts'
+      path: '/alerts'
+      fullPath: '/alerts'
+      preLoaderRoute: typeof AlertsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/belt-joints': {
+      id: '/belt-joints'
+      path: '/belt-joints'
+      fullPath: '/belt-joints'
+      preLoaderRoute: typeof BeltJointsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/conveyors': {
+      id: '/conveyors'
+      path: '/conveyors'
+      fullPath: '/conveyors'
+      preLoaderRoute: typeof ConveyorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/live-monitor': {
+      id: '/live-monitor'
+      path: '/live-monitor'
+      fullPath: '/live-monitor'
+      preLoaderRoute: typeof LiveMonitorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/maintenance': {
+      id: '/maintenance'
+      path: '/maintenance'
+      fullPath: '/maintenance'
+      preLoaderRoute: typeof MaintenanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AiPredictionsRoute: AiPredictionsRoute,
+  AlertsRoute: AlertsRoute,
+  BeltJointsRoute: BeltJointsRoute,
+  ConveyorsRoute: ConveyorsRoute,
+  LiveMonitorRoute: LiveMonitorRoute,
+  MaintenanceRoute: MaintenanceRoute,
+  ReportsRoute: ReportsRoute,
+  SettingsRoute: SettingsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
