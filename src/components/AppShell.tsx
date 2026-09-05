@@ -106,7 +106,8 @@ export function AppShell({
                 <Icon className="size-4" />
                 {label}
                 {label === "Alerts" && open > 0 && (
-                  <span className="ml-auto rounded-full bg-critical px-1.5 py-0.5 text-[10px] font-bold text-primary-foreground">
+                  <span className="ml-auto flex items-center gap-1 rounded-full bg-critical px-2 py-0.5 font-mono text-[10px] font-black text-white shadow-xs animate-pulse">
+                    <span className="size-1.5 rounded-full bg-white animate-ping" />
                     {open}
                   </span>
                 )}
