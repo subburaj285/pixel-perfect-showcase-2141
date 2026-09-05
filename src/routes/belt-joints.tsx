@@ -12,6 +12,7 @@ import { CreateTaskDialog } from "@/components/CreateTaskDialog";
 import {
   Activity,
   AlertTriangle,
+  Box,
   CheckCircle2,
   Cpu,
   Layers,
@@ -23,6 +24,8 @@ import {
   Microscope,
   FileCheck2,
   Gauge,
+  Eye,
+  Info,
 } from "lucide-react";
 
 export const Route = createFileRoute("/belt-joints")({
@@ -31,8 +34,9 @@ export const Route = createFileRoute("/belt-joints")({
 
 function BeltJointsPage() {
   const { conveyors, selectedConveyorId, selectedJointId, selectJoint } = useSystem();
-  const [activeTab, setActiveTab] = useState<"cross-section" | "thermal" | "acoustic" | "rfid">("cross-section");
+  const [activeTab, setActiveTab] = useState<"3d-cad" | "cross-section" | "thermal" | "acoustic" | "rfid">("3d-cad");
   const [isScanning, setIsScanning] = useState(true);
+  const [selectedHotspot, setSelectedHotspot] = useState<string | null>("steel-cords");
 
   const conveyor = conveyors.find((c) => c.id === selectedConveyorId) ?? conveyors[0];
   const joint = conveyor.joints.find((j) => j.id === selectedJointId) ?? conveyor.joints[0];
@@ -45,7 +49,7 @@ function BeltJointsPage() {
   return (
     <AppShell
       title="Belt Joints & Splices Diagnostic Center"
-      subtitle={`Real-time RFID, acoustic, thermal & AI vulcanized joint analysis for ${conveyor.id}`}
+      subtitle={`Real-time RFID, 3D CAD Telemetry, thermal & AI vulcanized joint analysis for ${conveyor.id}`}
     >
       <div className="space-y-6">
         {/* Top Control Bar */}
@@ -83,7 +87,7 @@ function BeltJointsPage() {
                 Joint Track Map & Splice Index
               </h2>
               <p className="text-xs text-muted-foreground">
-                Select any joint to inspect real-time sensor anomalies, internal vulcanization, and RFID telemetry.
+                Select any joint to inspect real-time sensor anomalies, internal vulcanization, and 3D CAD telemetry.
               </p>
             </div>
             <div className="flex items-center gap-2">
@@ -118,7 +122,18 @@ function BeltJointsPage() {
                   </div>
                   <p className="text-xs text-muted-foreground mt-0.5">{joint.condition}</p>
                 </div>
-                <div className="flex items-center gap-1 bg-surface/90 rounded-lg p-1 border border-border/50 text-xs">
+                <div className="flex items-center gap-1 bg-surface/90 rounded-lg p-1 border border-border/50 text-xs flex-wrap">
+                  <button
+                    onClick={() => setActiveTab("3d-cad")}
+                    className={`px-3 py-1.5 rounded-md font-medium transition-all flex items-center gap-1.5 ${
+                      activeTab === "3d-cad"
+                        ? "bg-primary text-primary-foreground shadow"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    <Box className="size-3.5" />
+                    3D Diagram
+                  </button>
                   <button
                     onClick={() => setActiveTab("cross-section")}
                     className={`px-3 py-1.5 rounded-md font-medium transition-all ${
@@ -161,6 +176,111 @@ function BeltJointsPage() {
                   </button>
                 </div>
               </div>
+
+              {/* View 0: 3D CAD Diagram Render */}
+              {activeTab === "3d-cad" && (
+                <div className="space-y-4">
+                  <div className="relative rounded-xl border border-primary/30 bg-black/60 overflow-hidden group">
+                    <img
+                      src="/belt_joint_3d.png"
+                      alt="3D Vulcanized Steel Cord Joint Diagram"
+                      className="w-full h-[320px] object-cover object-center rounded-xl transition-transform duration-500 group-hover:scale-105"
+                    />
+
+                    {/* Laser overlay animation */}
+                    {isScanning && (
+                      <div className="absolute inset-y-0 w-1 bg-gradient-to-b from-transparent via-red-500 to-transparent shadow-[0_0_20px_#ef4444] animate-pulse left-1/2 z-20 pointer-events-none" />
+                    )}
+
+                    {/* Hotspot Pins */}
+                    <button
+                      onClick={() => setSelectedHotspot("steel-cords")}
+                      className={`absolute top-[45%] left-[48%] size-6 rounded-full border-2 flex items-center justify-center text-[10px] font-bold shadow-lg transition-all ${
+                        selectedHotspot === "steel-cords"
+                          ? "bg-sky-500 border-white text-white scale-125 ring-4 ring-sky-500/40"
+                          : "bg-black/80 border-sky-400 text-sky-400 hover:scale-110"
+                      }`}
+                      title="Steel Cord Core"
+                    >
+                      1
+                    </button>
+
+                    <button
+                      onClick={() => setSelectedHotspot("laser-scanner")}
+                      className={`absolute top-[32%] left-[28%] size-6 rounded-full border-2 flex items-center justify-center text-[10px] font-bold shadow-lg transition-all ${
+                        selectedHotspot === "laser-scanner"
+                          ? "bg-amber-500 border-white text-white scale-125 ring-4 ring-amber-500/40"
+                          : "bg-black/80 border-amber-400 text-amber-400 hover:scale-110"
+                      }`}
+                      title="3D Laser Profiler"
+                    >
+                      2
+                    </button>
+
+                    <button
+                      onClick={() => setSelectedHotspot("thermal-gradient")}
+                      className={`absolute top-[28%] right-[22%] size-6 rounded-full border-2 flex items-center justify-center text-[10px] font-bold shadow-lg transition-all ${
+                        selectedHotspot === "thermal-gradient"
+                          ? "bg-rose-500 border-white text-white scale-125 ring-4 ring-rose-500/40"
+                          : "bg-black/80 border-rose-400 text-rose-400 hover:scale-110"
+                      }`}
+                      title="Thermal Gradient Analysis"
+                    >
+                      3
+                    </button>
+
+                    {/* HUD Overlay Label */}
+                    <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between p-3 rounded-lg bg-black/75 backdrop-blur border border-white/10 text-xs">
+                      <div className="flex items-center gap-2">
+                        <Box className="size-4 text-primary animate-pulse" />
+                        <div>
+                          <span className="font-semibold text-white">3D Vulcanized Joint Model (ST-4500)</span>
+                          <p className="text-[11px] text-stone-300">Click pins 1, 2, or 3 to inspect internal CAD layers</p>
+                        </div>
+                      </div>
+                      <span className="font-mono text-[11px] px-2 py-0.5 rounded bg-primary/20 text-primary border border-primary/30">
+                        8K CAD Render
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Hotspot Breakdown Info Box */}
+                  <div className="rounded-lg border border-border/80 bg-surface/60 p-4 space-y-2 text-xs">
+                    {selectedHotspot === "steel-cords" && (
+                      <div>
+                        <h4 className="font-bold text-sky-400 flex items-center gap-1.5 text-sm">
+                          <Eye className="size-4" /> 1. Internal Steel Cord Plies Integrity
+                        </h4>
+                        <p className="text-muted-foreground mt-1 leading-relaxed">
+                          High-tensile zinc-galvanized steel cords (7.2 mm diameter). Vulcanized bond matrix prevents cord slippage and dynamic tension rupture during peak ore loading (up to 4,500 t/h).
+                        </p>
+                      </div>
+                    )}
+
+                    {selectedHotspot === "laser-scanner" && (
+                      <div>
+                        <h4 className="font-bold text-amber-400 flex items-center gap-1.5 text-sm">
+                          <Eye className="size-4" /> 2. 3D Laser Optical Surface Profiling
+                        </h4>
+                        <p className="text-muted-foreground mt-1 leading-relaxed">
+                          Triangulated 3D laser scanners continuously map top cover rubber wear, splice step delamination, and surface micro-tears down to 0.05 mm precision.
+                        </p>
+                      </div>
+                    )}
+
+                    {selectedHotspot === "thermal-gradient" && (
+                      <div>
+                        <h4 className="font-bold text-rose-400 flex items-center gap-1.5 text-sm">
+                          <Eye className="size-4" /> 3. Infrared Thermal Gradient Analysis
+                        </h4>
+                        <p className="text-muted-foreground mt-1 leading-relaxed">
+                          Dual thermal camera matrix tracks friction heat buildup caused by internal cord friction, pulley misalignment, or ply separation.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* View 1: Vulcanized Cross-Section Diagram */}
               {activeTab === "cross-section" && (
@@ -426,6 +546,50 @@ function BeltJointsPage() {
             {/* AI Prediction Card */}
             <PredictionPanel conveyor={conveyor} joint={joint} prediction={prediction} />
 
+            {/* Structural Layer Health Breakdown Card */}
+            <div className="panel p-5 space-y-4 bg-card/75 backdrop-blur border-border/80">
+              <h3 className="panel-title text-sm flex items-center gap-2">
+                <Info className="size-4 text-primary" />
+                Structural Layer Health Breakdown
+              </h3>
+              <div className="space-y-3 text-xs">
+                <div className="space-y-1">
+                  <div className="flex justify-between text-muted-foreground">
+                    <span>Steel Cord Tensile Bond</span>
+                    <span className="font-mono font-semibold text-foreground">{joint.health}%</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-surface overflow-hidden">
+                    <div
+                      className={`h-full rounded-full ${
+                        joint.health > 80 ? "bg-healthy" : joint.health > 60 ? "bg-warning" : "bg-critical"
+                      }`}
+                      style={{ width: `${joint.health}%` }}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <div className="flex justify-between text-muted-foreground">
+                    <span>Vulcanized Rubber Adhesion</span>
+                    <span className="font-mono font-semibold text-foreground">{Math.min(100, joint.health + 8)}%</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-surface overflow-hidden">
+                    <div className="h-full rounded-full bg-primary" style={{ width: `${Math.min(100, joint.health + 8)}%` }} />
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <div className="flex justify-between text-muted-foreground">
+                    <span>Pulley Cover Friction Margin</span>
+                    <span className="font-mono font-semibold text-foreground">92%</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-surface overflow-hidden">
+                    <div className="h-full rounded-full bg-emerald-400" style={{ width: "92%" }} />
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* Deep Sensor Telemetry for this Joint */}
             <div className="panel p-5 space-y-4 bg-card/70 backdrop-blur">
               <h3 className="panel-title text-sm flex items-center gap-2">
@@ -467,3 +631,4 @@ function BeltJointsPage() {
     </AppShell>
   );
 }
+
