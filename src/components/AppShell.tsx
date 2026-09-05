@@ -151,31 +151,31 @@ export function AppShell({
         <main className="flex-1 p-4 lg:p-5">{children}</main>
       </div>
 
-      {/* GLOBAL RIGHT CORNER SMALL LANDSCAPE ALERT POP-UP */}
+      {/* GLOBAL RIGHT CORNER LANDSCAPE ALERT POP-UP (A LITTLE BIGGER) */}
       {showRedWarning && (
         <div className="fixed top-5 right-5 z-50 animate-in fade-in slide-in-from-top-3 duration-300">
-          <div className="flex items-center gap-3 rounded-xl border-2 border-amber-300 bg-white px-3.5 py-2 text-stone-900 shadow-xl">
-            <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-amber-50 border border-amber-200 text-amber-500">
-              <BellRing className="size-4 text-amber-500 animate-bounce" />
+          <div className="flex items-center gap-4 rounded-2xl border-2 border-amber-400 bg-white px-5 py-3 text-stone-900 shadow-2xl">
+            <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-amber-50 border border-amber-300 text-amber-500">
+              <BellRing className="size-6 text-amber-500 animate-bounce" />
             </div>
 
-            <span className="font-extrabold text-sm text-amber-500 tracking-wider uppercase">
+            <span className="font-extrabold text-base text-amber-500 tracking-wider uppercase">
               ALERT
             </span>
 
             <button
               onClick={() => setShowRedWarning(false)}
-              className="ml-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 px-2.5 py-1 text-xs font-bold transition-colors"
+              className="ml-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 px-3.5 py-1.5 text-xs font-bold transition-colors shadow-sm"
             >
               OK
             </button>
 
             <button
               onClick={() => setShowRedWarning(false)}
-              className="rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+              className="rounded-full p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
               aria-label="Dismiss alert"
             >
-              <X className="size-3.5" />
+              <X className="size-4" />
             </button>
           </div>
         </div>
@@ -183,6 +183,7 @@ export function AppShell({
     </div>
   );
 }
+
 
 
 
