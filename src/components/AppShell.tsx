@@ -141,35 +141,35 @@ export function AppShell({
         <main className="flex-1 p-4 lg:p-5">{children}</main>
       </div>
 
-      {/* GLOBAL CENTER RED WARNING POP-UP MODAL (ON ALL PAGES EVERY 10 SECONDS) */}
+      {/* GLOBAL RIGHT CORNER RED WARNING POP-UP (ON ALL PAGES EVERY 10 SECONDS) */}
       {showRedWarning && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in duration-200">
-          <div className="relative w-full max-w-sm rounded-3xl border-4 border-red-600 bg-stone-950 p-8 text-center text-white shadow-[0_0_100px_rgba(239,68,68,0.9)] space-y-6 animate-in zoom-in-95 duration-200">
+        <div className="fixed top-5 right-5 z-50 animate-in fade-in slide-in-from-top-5 duration-300">
+          <div className="relative w-80 rounded-2xl border-4 border-red-600 bg-stone-950 p-6 text-center text-white shadow-[0_0_50px_rgba(239,68,68,0.85)] space-y-4">
             <button
               onClick={() => setShowRedWarning(false)}
-              className="absolute top-4 right-4 rounded-full p-2 text-stone-400 hover:bg-red-950 hover:text-white transition-colors"
+              className="absolute top-3 right-3 rounded-full p-1.5 text-stone-400 hover:bg-red-950 hover:text-white transition-colors"
             >
-              <X className="size-6" />
+              <X className="size-5" />
             </button>
 
             <div className="flex justify-center">
-              <div className="relative flex size-20 items-center justify-center rounded-2xl bg-red-600/20 border-2 border-red-500 text-red-500 animate-pulse">
-                <Siren className="size-12 text-red-500 animate-bounce" />
-                <span className="absolute -top-1 -right-1 size-4 rounded-full bg-red-500 animate-ping" />
+              <div className="relative flex size-14 items-center justify-center rounded-xl bg-red-600/20 border-2 border-red-500 text-red-500 animate-pulse">
+                <Siren className="size-8 text-red-500 animate-bounce" />
+                <span className="absolute -top-1 -right-1 size-3 rounded-full bg-red-500 animate-ping" />
               </div>
             </div>
 
             <div className="space-y-1">
-              <h2 className="font-extrabold text-4xl text-red-500 tracking-wider uppercase animate-pulse">
+              <h2 className="font-extrabold text-2xl text-red-500 tracking-wider uppercase animate-pulse">
                 WARNING
               </h2>
-              <p className="text-xs text-red-400 font-mono font-semibold uppercase tracking-widest">
+              <p className="text-[10px] text-red-400 font-mono font-semibold uppercase tracking-widest">
                 CRITICAL SYSTEM ALERT
               </p>
             </div>
 
             <Button
-              className="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-6 text-base rounded-xl shadow-lg shadow-red-950"
+              className="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-4 text-xs rounded-xl shadow-lg shadow-red-950"
               onClick={() => setShowRedWarning(false)}
             >
               OK / DISMISS
@@ -180,4 +180,5 @@ export function AppShell({
     </div>
   );
 }
+
 
