@@ -12,7 +12,7 @@ import {
   Settings,
   Mountain,
   CircleUserRound,
-  AlertTriangle,
+  BellRing,
   X,
 } from "lucide-react";
 import { useSystem } from "@/lib/system-store";
@@ -31,6 +31,14 @@ const NAV = [
   { to: "/settings", label: "Settings", icon: Settings },
 ] as const;
 
+const ALERT_REASONS = [
+  "CV-04 Joint J-23: High vibration spike (7.8 mm/s) detected.",
+  "CV-07 Joint J-12: Sustained belt over-tension (82 kN).",
+  "CV-03 Joint J-08: Belt tracking drift (3.5 mm) at pulley.",
+  "CV-06 Joint J-18: Acoustic delamination anomaly (85 dB).",
+  "CV-12 Joint J-31: Idler bearing temperature elevated (68.4 °C).",
+];
+
 export function AppShell({
   title,
   subtitle,
@@ -46,6 +54,7 @@ export function AppShell({
   const open = alerts.filter((a) => !a.acknowledged).length;
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [showRedWarning, setShowRedWarning] = useState(false);
+  const [alertIndex, setAlertIndex] = useState(0);
 
   // Global 10-second RED WARNING pop-up effect for ALL pages
   useEffect(() => {
@@ -54,6 +63,7 @@ export function AppShell({
     }, 2000);
 
     const interval = setInterval(() => {
+      setAlertIndex((prev) => (prev + 1) % ALERT_REASONS.length);
       setShowRedWarning(true);
     }, 10000);
 
@@ -141,29 +151,29 @@ export function AppShell({
         <main className="flex-1 p-4 lg:p-5">{children}</main>
       </div>
 
-      {/* GLOBAL RIGHT CORNER SMALL WHITE ALERT POP-UP (WITH LIGHT YELLOW TEXT) */}
+      {/* GLOBAL RIGHT CORNER SMALL WHITE ALERT POP-UP (WITH LIGHT YELLOW TEXT & REASON) */}
       {showRedWarning && (
         <div className="fixed top-5 right-5 z-50 animate-in fade-in slide-in-from-top-3 duration-300">
-          <div className="relative w-64 rounded-xl border-2 border-amber-300 bg-white p-3.5 text-center shadow-xl space-y-2.5">
+          <div className="relative w-72 rounded-xl border-2 border-amber-300 bg-white p-4 text-center shadow-xl space-y-3">
             <button
               onClick={() => setShowRedWarning(false)}
-              className="absolute top-2 right-2 rounded-full p-1 text-slate-400 hover:bg-amber-50 hover:text-amber-600 transition-colors"
+              className="absolute top-2.5 right-2.5 rounded-full p-1 text-slate-400 hover:bg-amber-50 hover:text-amber-600 transition-colors"
             >
               <X className="size-4" />
             </button>
 
             <div className="flex justify-center">
-              <div className="flex size-10 items-center justify-center rounded-full bg-amber-50 border border-amber-200 text-amber-500">
-                <AlertTriangle className="size-5 text-amber-500 animate-bounce" />
+              <div className="flex size-11 items-center justify-center rounded-full bg-amber-50 border border-amber-200 text-amber-500">
+                <BellRing className="size-6 text-amber-500 animate-bounce" />
               </div>
             </div>
 
-            <div className="space-y-0.5">
+            <div className="space-y-1">
               <h2 className="font-extrabold text-base text-amber-500 tracking-wide uppercase">
                 ALERT
               </h2>
-              <p className="text-[10px] text-amber-600 font-medium uppercase tracking-wider">
-                SYSTEM NOTIFICATION
+              <p className="text-xs text-amber-700 font-medium leading-snug px-1">
+                {ALERT_REASONS[alertIndex]}
               </p>
             </div>
 
@@ -180,6 +190,7 @@ export function AppShell({
     </div>
   );
 }
+
 
 
 
